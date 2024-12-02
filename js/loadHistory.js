@@ -10,24 +10,28 @@ function loadHistory() {
             const scoreData = localStorage.getItem(key);
             const data = JSON.parse(scoreData);
 
-            // Create a text entry for the saved score
-            const matchEntry = document.createElement('div');
-            matchEntry.className = 'match-entry';
-            matchEntry.innerHTML = `
-                <p><strong>Team Name:</strong> ${data.teamName}</p>
-                <p><strong>Score:</strong> ${data.currentScore}</p>
-                <p><strong>Net Zone Samples:</strong> ${data.nzNum}</p>
-                <p><strong>Low Box:</strong> ${data.lbNum}</p>
-                <p><strong>High Box:</strong> ${data.hbNum}</p>
-                <p><strong>Net Zone TeleOp Samples:</strong> ${data.nzTeleOpNum}</p>
-                <p><strong>Low Box TeleOp Samples:</strong> ${data.lbTeleOpNum}</p>
-                <p><strong>High Box TeleOp Samples:</strong> ${data.hbTeleOpNum}</p>
-                <p><strong>Low Corner TeleOp Samples:</strong> ${data.lcTeleOpNum}</p>
-                <p><strong>High Corner TeleOp Samples:</strong> ${data.hcTeleOpNum}</p>
-                <p><strong>End Game Location:</strong> ${getEndGameLocation(data.endGamePoints)}</p>
-                <p><strong>TeleOp End Game Location:</strong> ${getEndGameLocation(data.endGamePointsTeleOp)}</p>
-            `;
-            loadButtonsDiv.appendChild(matchEntry);
+            // Check if currentScore is defined before creating the entry
+            if (data.currentScore !== undefined) {
+                // Create a text entry for the saved score
+                const matchEntry = document.createElement('div');
+                matchEntry.className = 'match-entry';
+                matchEntry.innerHTML = `
+                    <p><strong>Team Name:</strong> ${data.teamName}</p>
+                    <p><strong>Score:</strong> ${data.currentScore}</p>
+                    <p><strong>Net Zone Samples:</strong> ${data.nzNum}</p>
+                    <p><strong>Low Box:</strong> ${data.lbNum}</p>
+                    <p><strong>High Box:</strong> ${data.hbNum}</p>
+                    <p><strong>Net Zone TeleOp Samples:</strong> ${data.nzTeleOpNum}</p>
+                    <p><strong>Low Box TeleOp Samples:</strong> ${data.lbTeleOpNum}</p>
+                    <p><strong>High Box TeleOp Samples:</strong> ${data.hbTeleOpNum}</p>
+                    <p><strong>Low Corner TeleOp Samples:</strong> ${data.lcTeleOpNum}</p>
+                    <p><strong>High Corner TeleOp Samples:</strong> ${data.hcTeleOpNum}</p>
+                    <p><strong>End Game Location:</strong> ${getEndGameLocation(data.endGamePoints)}</p>
+                    <p><strong>TeleOp End Game Location:</strong> ${getEndGameLocation(data.endGamePointsTeleOp)}</p>
+                    <p><strong>Comment:</strong> ${data.comment}</p>
+                `;
+                loadButtonsDiv.appendChild(matchEntry);
+            }
         }
     }
 

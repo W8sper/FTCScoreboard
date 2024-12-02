@@ -27,6 +27,8 @@ const POINTS = {
     egTeleOp: 1 // New multiplier for TeleOp
 };
 
+const TEAM_NAME = document.getElementById('teamName'); // Keep the constant for team name
+
 function updateScore() {
     document.getElementById('score').textContent = currentScore;
     document.getElementById('nzid').textContent = nzNum;
@@ -95,6 +97,7 @@ function addPoints(type, coefficient) {
     updateScore();
 }
 
+//生成address的逻辑：username+从1开始increment by 1的整数
 function generateAddress() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     // Retrieve the current address counter for the user
@@ -110,9 +113,7 @@ function saveScore() {
         alert('No user is logged in. Please log in to save the score.'); // Debugging alert
         return;
     }
-
-    const teamName = document.getElementById('teamName').value; // Get the team name from input
-
+    
     const scoreData = {
         currentScore,
         nzNum,
@@ -129,8 +130,9 @@ function saveScore() {
         hbTeleOpNum,
         lcTeleOpNum,
         hcTeleOpNum,
-        teamName, // Include team name in the saved data
-        address: generateAddress() // Generate a unique address bound to the user
+        address: generateAddress(), // Generate a unique address bound to the user
+        teamName: TEAM_NAME.value, // Keep team name input
+        comment: document.getElementById('commentInput').value // {{ edit_2 }}
     };
 
     // Save score data to local storage with a unique key
@@ -174,4 +176,37 @@ function handleEndGameChangeTeleOp(radio) {
     addPoints('egTeleOp', newPoints);
     // Update the tracking variable
     lastEndGamePointsTeleOp = newPoints;
+}
+
+// Update loadScoreData to include team name and comment
+function loadScoreData(addressKey) {
+    const scoreData = localStorage.getItem(addressKey);
+    if (scoreData) {
+        const data = JSON.parse(scoreData);
+        // Load the data into the scoreboard
+        currentScore = data.currentScore;
+        nzNum = data.nzNum;
+        lbNum = data.lbNum;
+        hbNum = data.hbNum;
+        lcNum = data.lcNum;
+        hcNum = data.hcNum;
+        nzTeleOpNum = data.nzTeleOpNum;
+        lbTeleOpNum = data.lbTeleOpNum;
+        hbTeleOpNum = data.hbTeleOpNum;
+        lcTeleOpNum = data.lcTeleOpNum;
+        hcTeleOpNum = data.hcTeleOpNum;
+
+        // Set the radio buttons based on saved data
+        document.querySelector(`input[name="endGame"][value="${data.endGamePoints}"]`).checked = true;
+        document.querySelector(`input[name="endGameTeleOp"][value="${data.endGamePointsTeleOp}"]`).checked = true;
+
+        // Load the team name and comment into the inputs
+        TEAM_NAME.value = data.teamName; // Keep team name input
+        document.getElementById('commentInput').value = data.comment; // {{ edit_3 }}
+
+        // Update the displayed scores
+        updateScore(); // Call your existing updateScore function
+    } else {
+        console.warn(`No score data found for ${addressKey}`);
+    }
 }
